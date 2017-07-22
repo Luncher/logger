@@ -4,12 +4,10 @@
 [![npm version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
 
- logger middleware for [koa](https://github.com/Luncher/logger).
+ logger middleware for [koav2](https://github.com/Luncher/logger).
 
 
 >Wrapper `koa-logger` adapt production enveriment
-
-__Support `koa@2`;__
 
 
 ## Example
