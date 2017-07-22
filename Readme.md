@@ -4,7 +4,7 @@
 [![npm version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
 
- logger middleware for [koa](https://github.com/koajs/koa).
+ logger middleware for [koa](https://github.com/Luncher/logger).
 
 
 >Wrapper `koa-logger` adapt production enveriment
