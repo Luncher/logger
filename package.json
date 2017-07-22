@@ -25,6 +25,7 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "koa": "^2.0.0-alpha.7",
+    "koa-bodyparser": "^4.2.0",
     "koa-route": "^3.2.0",
     "mocha": "^3.2.0",
     "sinon": "^1.17.7",
