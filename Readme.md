@@ -35,7 +35,7 @@ app.use(logger(option))
 
   MIT
 
-[npm-image]: https://img.shields.io/npm/v/koa-logger.svg?style=flat-square
-[npm-url]: https://www.npmjs.com/package/koa-logger
-[travis-image]: https://img.shields.io/travis/koajs/logger.svg?style=flat-square
-[travis-url]: https://travis-ci.org/koajs/logger
+[npm-image]: https://img.shields.io/npm/v/koa-logger-adapter.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/koa-logger-adapter
+[travis-image]: https://img.shields.io/travis/Luncher/logger.svg?style=flat-square
+[travis-url]: https://travis-ci.org/Luncher/logger
