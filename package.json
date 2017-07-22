@@ -1,8 +1,7 @@
 {
-  "name": "koa-logger",
+  "name": "koa-logger-adapter",
   "description": "Logging middleware for koa",
-  "repository": "koajs/logger",
-  "version": "3.0.1",
+  "version": "1.0.0",
   "keywords": [
     "koa",
     "middleware",
