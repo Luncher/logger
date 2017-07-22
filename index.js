@@ -62,7 +62,7 @@ Logger.formatColors = function (ctx, status, start) {
     0: 'yellow'
   }
   const s = status / 100
-  const color = colorCodes.hasOwnProperty(s) ? colorCodes[s] : 0
+  const color = colorCodes.hasOwnProperty(s) ? colorCodes[s] : colorCodes[0]
   
   return util.format(
     ' ' + chalk.blue('%s') +
