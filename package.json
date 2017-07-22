@@ -1,13 +1,22 @@
 {
   "name": "koa-logger-adapter",
   "description": "Logging middleware for koa",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "keywords": [
     "koa",
     "middleware",
     "logger",
     "log"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Luncher/logger"
+  },
+  "author": {
+    "name": "linchen",
+    "email": "gakiclin@gmail.com",
+    "url": "https://github.com/Luncher"
+  },
   "files": [
     "index.js"
   ],
