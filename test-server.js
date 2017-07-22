@@ -13,7 +13,6 @@ app.use(logger())
 app.use(bodyParser())
 
 app.use(_.get('/200', function (ctx) {
-  ctx.body = 'hello world'
 }))
 
 app.use(_.get('/301', function (ctx) {
