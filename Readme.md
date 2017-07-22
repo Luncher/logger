@@ -15,11 +15,15 @@ __Support `koa@2`;__
 ## Example
 
 ```js
-const logger = require('./index')
+const logger = require('koa-logger-adapter')
 const Koa = require('koa')
 
+const option = {
+  stream: fs.createWriteStream('./logs/access.log'), //setup log stream(default is process.stdout)
+  color: true //enable color output
+}
 const app = new Koa()
-app.use(logger())
+app.use(logger(option))
 ```
 
 ## Notes
