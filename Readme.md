@@ -18,7 +18,8 @@ const Koa = require('koa')
 
 const option = {
   stream: fs.createWriteStream('./logs/access.log'), //setup log stream(default is process.stdout)
-  color: true //enable color output
+  color: true, //enable color output
+  headers: []//customize headers
 }
 const app = new Koa()
 app.use(logger(option))
