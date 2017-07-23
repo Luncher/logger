@@ -11,18 +11,22 @@ const humanize = require('humanize-number')
 
 const DefaultOption = {
   color: true,  
-  stream: process.stdout
+  stream: process.stdout,
+  headers: []
 }
 
-function Logger (option = DefaultOption) {
+function Logger (option = {}) {
+  option = Object.assign({}, DefaultOption, option)
   return async function (ctx, next) {
     const start = Date.now()
+
+    Logger.writeBefore(ctx, option, start)
 
     try {
       await next()
     } catch (err) {
       // log uncaught downstream errors
-      Logger.write(ctx, option, start , err)
+      Logger.writeAfter(ctx, option, start , err)
       throw err
     }
 
@@ -39,7 +43,7 @@ function Logger (option = DefaultOption) {
     function done (event) {
       res.removeListener('finish', onfinish)
       res.removeListener('close', onclose)
-      Logger.write(ctx, option, start)
+      Logger.writeAfter(ctx, option, start)
     }
   }
 }
@@ -51,7 +55,7 @@ Logger.formatTime = function (start) {
     : Math.round(delta / 1000) + 's')
 }
 
-Logger.formatColors = function (ctx, status, start) {
+Logger.formatAfterColors = function (ctx, status, start) {
   const colorCodes = {
     7: 'magenta',
     5: 'red',
@@ -64,7 +68,7 @@ Logger.formatColors = function (ctx, status, start) {
   const s = status / 100
   const color = colorCodes.hasOwnProperty(s) ? colorCodes[s] : colorCodes[0]
   
-  return util.format(
+  return util.format(' ' + '>>>' +
     ' ' + chalk.blue('%s') +
     ' ' + chalk.green('%s') +
     ' ' + chalk.bold('%s') +
@@ -73,18 +77,19 @@ Logger.formatColors = function (ctx, status, start) {
     ' ' + chalk[color]('%s') +
     ' ' + chalk.gray('%s') +
     ' ' + chalk.white('%j'),
-      new Date(start).toISOString(),
+      new Date().toISOString(),
       ctx.ip,
       ctx.method,
       ctx.originalUrl,
       ctx.request.body || {},
       status,
       this.formatTime(start),
-      ctx.body)
+      ctx.body || {})
 }
 
-Logger.formatNormal = function (ctx, status, start) {
-  return util.format(
+Logger.formatAfterNormal = function (ctx, status, start) {
+  console.log(ctx.body || {})
+  return util.format(' ' + '>>>' +
     ' %s' +
     ' %s' +
     ' %s' +
@@ -93,17 +98,17 @@ Logger.formatNormal = function (ctx, status, start) {
     ' %s' +
     ' %s' +
     ' %j',
-      new Date(start).toISOString(),
+      new Date().toISOString(),
       ctx.ip,
       ctx.method,
       ctx.originalUrl,
       ctx.request.body || {},
       status,
       this.formatTime(start),
-      ctx.body)
+      ctx.body || {})
 }
 
-Logger.write = function (ctx, option, start, err) {
+Logger.writeAfter = function (ctx, option, start, err) {
   const status = err
     ? (err.status || 500)
     : (ctx.status || 404)
@@ -112,9 +117,9 @@ Logger.write = function (ctx, option, start, err) {
   const { color, stream } = option
 
   if (color) {
-    logStr = this.formatColors(ctx, status, start)
+    logStr = this.formatAfterColors(ctx, status, start)
   } else {
-    logStr = this.formatNormal(ctx, status, start)
+    logStr = this.formatAfterNormal(ctx, status, start)
   }
 
   stream.write(logStr + '\n')
@@ -122,6 +127,63 @@ Logger.write = function (ctx, option, start, err) {
   return
 }
 
+Logger.formatBeforeColors = function (ctx, option, start) {
+  const headers = option.headers
+  
+  const extStr = util.format(headers.reduce((acc, cur) => {
+      return acc + cur + ':' + chalk.gray('%s')
+    }, ' '),
+    ...headers.map(it => ctx.get(it) || ''))
+  
+  
+  const normalStr = util.format(' ' + '<<<' +
+    ' ' + chalk.blue('%s') +
+    ' ' + chalk.green('%s') + 
+    ' ' + chalk.bold('%s') +
+    ' ' + chalk.gray('%s'),
+    new Date(start).toISOString(),
+    ctx.ip,
+    ctx.method,
+    ctx.originalUrl);
+
+  return normalStr + extStr
+}
+
+Logger.formatBeforeNormal = function (ctx, option, start) {
+  const headers = option.headers
+
+  const extStr = util.format(headers.reduce((acc, cur) => {
+      return acc + cur + ':%s'
+    }, ' '), 
+    ...headers.map(it => ctx.get(it) || ''))
+
+  const normalStr = util.format(' ' + '<<<' +
+    ' %s' + 
+    ' %s' + 
+    ' %s' + 
+    ' %s',
+    new Date(start).toISOString(),
+    ctx.ip,
+    ctx.method,
+    ctx.originalUrl);
+  
+  return normalStr + extStr
+}
+
+Logger.writeBefore = function (ctx, option, start, err) {
+  let logStr = ""
+  const { color, stream } = option
+
+  if (color) {
+    logStr = this.formatBeforeColors(ctx, option, start)
+  } else {
+    logStr = this.formatBeforeNormal(ctx, option, start)
+  }
+
+  stream.write(logStr + '\n')
+
+  return
+}
 
 /**
  * Expose logger.
