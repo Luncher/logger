@@ -28,7 +28,7 @@ app.use(logger(option))
 ## Notes
 
   Recommended that you `.use()` this middleware near the top
-  to "wrap" all subsequent middleware.
+  to "wrap" all subsequent middleware. If you using proxy, please setup `app.proxy = true`
 
 ## License
 
